@@ -8,9 +8,12 @@ import java.awt.event.WindowEvent;
  * @date 2021/5/12 21:14
  * @description
  */
-public class T {
-    public static void main(String[] args) {
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
         TankFrame f = new TankFrame();
-
+        while (true) {
+            Thread.sleep(50);
+            f.repaint();
+        }
     }
 }

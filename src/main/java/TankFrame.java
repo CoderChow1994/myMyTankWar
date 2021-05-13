@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -8,12 +10,15 @@ import java.awt.event.WindowEvent;
  * @description
  */
 public class TankFrame extends Frame {
-    public TankFrame()  {
+    int x = 200;
+    int y = 200;
+
+    public TankFrame() {
         setResizable(false);
-        setSize(800,600);
+        setSize(800, 600);
         setTitle("Tank");
         setVisible(true);
-
+        addKeyListener(new MyKeyListerner());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -24,6 +29,21 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g) {
-        System.out.println("paint");
+        g.fillRect(x, y, 50, 50);
+        x += 10;
+//        y += 10;
+    }
+
+    class MyKeyListerner extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            x += 10;
+            repaint();
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+        }
     }
 }
+
