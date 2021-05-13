@@ -14,6 +14,7 @@ import java.awt.event.WindowEvent;
 public class TankFrame extends Frame {
     Tank tank = new Tank(200, 200, Dir.DOWN);
 
+    Bullet bullet = new Bullet(300,300,Dir.DOWN);
     public TankFrame() {
         setResizable(false);
         setSize(800, 600);
@@ -36,6 +37,7 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         tank.paint(g);
+        bullet.paint(g);
 
     }
 
@@ -94,6 +96,11 @@ public class TankFrame extends Frame {
          * Ì¹¿Ë·½Ïò
          */
         private void setMainTankDir() {
+            if (!bL && !bU && !bR && !bD) {
+                tank.setMoving(false);
+                return;
+            }
+            tank.setMoving(true);
             if (bL) tank.setDir(Dir.LEFT);
             if (bU) tank.setDir(Dir.UP);
             if (bR) tank.setDir(Dir.RIGHT);
