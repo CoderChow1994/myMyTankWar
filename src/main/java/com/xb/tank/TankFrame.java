@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vincent.Chow
@@ -12,12 +14,15 @@ import java.awt.event.WindowEvent;
  * @description
  */
 public class TankFrame extends Frame {
-    Tank tank = new Tank(200, 200, Dir.DOWN);
+    static final int GAME_WIDTH = 800, GAME_HEIGHT = 800;
 
-    Bullet bullet = new Bullet(300,300,Dir.DOWN);
+    Tank tank = new Tank(200, 200, Dir.DOWN, this);
+
+    List<Bullet> bullets = new ArrayList<>();
+
     public TankFrame() {
         setResizable(false);
-        setSize(800, 600);
+        setSize(GAME_WIDTH, GAME_HEIGHT);
         setTitle("Tank");
         setVisible(true);
         addKeyListener(new MyKeyListerner());
@@ -29,16 +34,40 @@ public class TankFrame extends Frame {
         });
     }
 
+    Image offScreenImage = null;
+
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = createImage(GAME_WIDTH, GAME_HEIGHT);
+        }
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(Color.black);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+
     /**
      * 绘画移动
      *
      * @param g
      */
     @Override
-    public void paint(Graphics g) {
-        tank.paint(g);
-        bullet.paint(g);
 
+    public void paint(Graphics g) {
+        Color color = g.getColor();
+        g.setColor(Color.white);
+        g.drawString("子弹的数量：" + bullets.size(), 10, 60);
+        g.setColor(color);
+
+        tank.paint(g);
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
     }
 
     /**
@@ -66,6 +95,8 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_DOWN:
                     bD = true;
                     break;
+                case KeyEvent.VK_CONTROL:
+                    tank.fire();
             }
             //repaint();
             setMainTankDir();
